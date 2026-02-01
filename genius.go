@@ -23,9 +23,9 @@ type Client struct {
 	userAgent string
 	token     string
 
-	common Service // reuse a single Client copy for all services
-
-	Songs *SongsService
+	common  Service // reuse a single Client copy for all services
+	Artists *ArtistsService
+	Songs   *SongsService
 }
 
 type Service struct {
@@ -47,6 +47,7 @@ func NewClient(token string) (*Client, error) {
 
 	// Create services
 	c.common.client = c
+	c.Artists = (*ArtistsService)(&c.common)
 	c.Songs = (*SongsService)(&c.common)
 
 	return c, nil

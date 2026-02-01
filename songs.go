@@ -48,15 +48,6 @@ type Album struct {
 	PrimaryArtists        []*Artist `json:"primary_artists"`
 }
 
-type Artist struct {
-	APIPath    string `json:"api_path"`
-	ID         int    `json:"id"`
-	ImageURL   string `json:"image_url"`
-	IsVerified bool   `json:"is_verified"`
-	Name       string `json:"name"`
-	URL        string `json:"url"`
-}
-
 type CustomPerformance struct {
 	Label   string    `json:"label"`
 	Artists []*Artist `json:"artists"`
