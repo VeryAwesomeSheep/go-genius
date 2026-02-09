@@ -8,6 +8,8 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -101,6 +103,84 @@ type Response[T any] struct {
 		Message string `json:"message"`
 	} `json:"meta"`
 	Response T `json:"response"`
+}
+
+func addOptions(s string, opts any) (string, error) {
+	v := reflect.ValueOf(opts)
+	if v.Kind() == reflect.Ptr && v.IsNil() {
+		return s, nil
+	}
+
+	u, err := url.Parse(s)
+	if err != nil {
+		return s, err
+	}
+
+	q := u.Query()
+
+	// Helper function for recursive parsing of struct fields
+	var parseStruct func(reflect.Value)
+	parseStruct = func(v reflect.Value) {
+		if v.Kind() == reflect.Ptr {
+			if v.IsNil() {
+				return
+			}
+			v = v.Elem()
+		}
+
+		if v.Kind() != reflect.Struct {
+			return
+		}
+
+		t := v.Type()
+		for i := 0; i < v.NumField(); i++ {
+			field := t.Field(i)
+			value := v.Field(i)
+
+			// Handle embedded structs (ex. PagingOptions)
+			if field.Anonymous {
+				parseStruct(value)
+				continue
+			}
+
+			// Get the "url" tag
+			tag := field.Tag.Get("url")
+			if tag == "" || tag == "-" {
+				continue
+			}
+
+			// Parse tag options
+			parts := strings.Split(tag, ",")
+			key := parts[0]
+			omitEmpty := len(parts) > 1 && parts[1] == "omitempty"
+
+			// Check for zero values if omitempty is set
+			if omitEmpty && value.IsZero() {
+				continue
+			}
+
+			// Convert value to string and add to query
+			switch value.Kind() {
+			case reflect.String:
+				q.Set(key, value.String())
+			case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+				q.Set(key, strconv.FormatInt(value.Int(), 10))
+			case reflect.Bool:
+				q.Set(key, strconv.FormatBool(value.Bool()))
+			}
+		}
+	}
+
+	parseStruct(v)
+
+	u.RawQuery = q.Encode()
+
+	return u.String(), nil
+}
+
+type PagingOptions struct {
+	PerPage int `url:"per_page,omitempty"`
+	Page    int `url:"page,omitempty"`
 }
 
 func (c *Client) Do(ctx context.Context, req *http.Request, v any) (*http.Response, error) {

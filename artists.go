@@ -26,6 +26,18 @@ type SocialLinks struct {
 	Instagram *string `json:"instagram"`
 }
 
+type ArtistSongsSort string
+
+const (
+	SortTitle      ArtistSongsSort = "title"
+	SortPopularity ArtistSongsSort = "popularity"
+)
+
+type ArtistSongsOptions struct {
+	Sort ArtistSongsSort `url:"sort,omitempty"`
+	PagingOptions
+}
+
 func (s *ArtistsService) Get(ctx context.Context, id int) (*Artist, *http.Response, error) {
 	u := fmt.Sprintf("artists/%d", id)
 
@@ -44,4 +56,30 @@ func (s *ArtistsService) Get(ctx context.Context, id int) (*Artist, *http.Respon
 	}
 
 	return r.Response.Artist, resp, nil
+}
+
+func (s *ArtistsService) GetSongs(ctx context.Context, id int, opts *ArtistSongsOptions) ([]*SongRelationshipsSong, *http.Response, error) {
+	u := fmt.Sprintf("artists/%d/songs", id)
+
+	u, err := addOptions(u, opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req, err := s.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var r Response[struct {
+		Songs    []*SongRelationshipsSong `json:"songs"`
+		NextPage *int                     `json:"next_page"`
+	}]
+
+	resp, err := s.client.Do(ctx, req, &r)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return r.Response.Songs, resp, nil
 }
