@@ -28,6 +28,7 @@ type Client struct {
 	common  Service // reuse a single Client copy for all services
 	Artists *ArtistsService
 	Songs   *SongsService
+	Search  *SearchService
 }
 
 type Service struct {
@@ -51,6 +52,7 @@ func NewClient(token string) (*Client, error) {
 	c.common.client = c
 	c.Artists = (*ArtistsService)(&c.common)
 	c.Songs = (*SongsService)(&c.common)
+	c.Search = (*SearchService)(&c.common)
 
 	return c, nil
 }

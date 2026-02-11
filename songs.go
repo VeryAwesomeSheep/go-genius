@@ -84,9 +84,9 @@ type SongRelationshipsSong struct {
 }
 
 type ReleaseDateComponents struct {
-	Year  int `json:"year"`
-	Month int `json:"month"`
-	Day   int `json:"day"`
+	Year  *int `json:"year"`
+	Month *int `json:"month"`
+	Day   *int `json:"day"`
 }
 
 type TranslationSong struct {
