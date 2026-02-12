@@ -25,10 +25,11 @@ type Client struct {
 	userAgent string
 	token     string
 
-	common  Service // reuse a single Client copy for all services
-	Artists *ArtistsService
-	Songs   *SongsService
-	Search  *SearchService
+	common      Service // reuse a single Client copy for all services
+	Annotations *AnnotationsService
+	Artists     *ArtistsService
+	Songs       *SongsService
+	Search      *SearchService
 }
 
 type Service struct {
@@ -50,6 +51,7 @@ func NewClient(token string) (*Client, error) {
 
 	// Create services
 	c.common.client = c
+	c.Annotations = (*AnnotationsService)(&c.common)
 	c.Artists = (*ArtistsService)(&c.common)
 	c.Songs = (*SongsService)(&c.common)
 	c.Search = (*SearchService)(&c.common)
@@ -183,6 +185,24 @@ func addOptions(s string, opts any) (string, error) {
 type PagingOptions struct {
 	PerPage int `url:"per_page,omitempty"`
 	Page    int `url:"page,omitempty"`
+}
+
+type TextFormat string
+
+const (
+	FormatDom   TextFormat = "dom"
+	FormatPlain TextFormat = "plain"
+	FormatHTML  TextFormat = "html"
+)
+
+type TextFormatOptions struct {
+	TextFormat TextFormat `url:"text_format,omitempty"`
+}
+
+type TextBody struct {
+	Dom   any    `json:"dom"`   // Populated by default or if ?text_format=dom is used
+	Plain string `json:"plain"` // Only populated if ?text_format=plain is used
+	HTML  string `json:"html"`  // Only populated if ?text_format=html is used
 }
 
 func (c *Client) Do(ctx context.Context, req *http.Request, v any) (*http.Response, error) {
