@@ -30,6 +30,7 @@ type Client struct {
 	Referents   *ReferentsService
 	Artists     *ArtistsService
 	Songs       *SongsService
+	WebPages    *WebPagesService
 	Search      *SearchService
 }
 
@@ -56,6 +57,7 @@ func NewClient(token string) (*Client, error) {
 	c.Referents = (*ReferentsService)(&c.common)
 	c.Artists = (*ArtistsService)(&c.common)
 	c.Songs = (*SongsService)(&c.common)
+	c.WebPages = (*WebPagesService)(&c.common)
 	c.Search = (*SearchService)(&c.common)
 
 	return c, nil
