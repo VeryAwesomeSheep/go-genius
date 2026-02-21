@@ -11,13 +11,12 @@ import (
 )
 
 func main() {
-	token := "your-client-access-token"
-	if token == "" {
-		log.Fatal("No user token present")
+	// Create new client
+	config := &genius.Config{
+		Token: "your-client-access-token",
 	}
 
-	// Create new client
-	client, err := genius.NewClient(token)
+	client, err := genius.NewClient(config)
 	if err != nil {
 		log.Fatal(err)
 	}

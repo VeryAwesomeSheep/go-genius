@@ -11,13 +11,12 @@ import (
 )
 
 func main() {
-	token := "your-client-access-token"
-	if token == "" {
-		log.Fatal("No user token present")
+	// Create new client
+	config := &genius.Config{
+		Token: "your-client-access-token",
 	}
 
-	// Create new client
-	client, err := genius.NewClient(token)
+	client, err := genius.NewClient(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,7 +26,8 @@ func main() {
 	defer cancel()
 
 	// Request Annotation data
-	annotation, referent, _, err := client.Annotations.Get(ctx, annotation-id, &genius.AnnotationsOptions{TextFormatOptions: genius.TextFormatOptions{TextFormat: genius.FormatPlain}})
+	annotationID := 1234
+	annotation, referent, _, err := client.Annotations.Get(ctx, annotationID, &genius.AnnotationsOptions{TextFormatOptions: genius.TextFormatOptions{TextFormat: genius.FormatPlain}})
 	if err != nil {
 		log.Fatal(err)
 	}

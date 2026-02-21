@@ -8,9 +8,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -18,6 +20,28 @@ const (
 	defaultUserAgent = "go-genius" + "/" + version
 	defaultBaseURL   = "https://api.genius.com/"
 )
+
+// Config specifies Client configuration.
+type Config struct {
+	BaseURL   string
+	Token     string
+	HTTP      *http.Client
+	UserAgent string
+	Version   string
+}
+
+// DefaultConfig creates a default configuration for Client.
+func DefaultConfig() *Config {
+	config := &Config{
+		BaseURL:   defaultBaseURL,
+		Token:     os.Getenv("GENIUS_ACCESS_TOKEN"),
+		HTTP:      &http.Client{Timeout: 5 * time.Second},
+		UserAgent: defaultUserAgent,
+		Version:   version,
+	}
+
+	return config
+}
 
 // Client is a Genius API client that provides bacis for accessing Genius API.
 type Client struct {
@@ -41,17 +65,41 @@ type Service struct {
 }
 
 // NewClient creates a new Genius API client.
-func NewClient(token string) (*Client, error) {
-	if token == "" {
-		return nil, fmt.Errorf("token cannot be empty")
+func NewClient(cfg *Config) (*Client, error) {
+	config := DefaultConfig()
+
+	// Overwrite default config with user defined values
+	if cfg != nil {
+		if cfg.BaseURL != "" {
+			config.BaseURL = cfg.BaseURL
+		}
+		if cfg.Token != "" {
+			config.Token = cfg.Token
+		}
+		if cfg.HTTP != nil {
+			config.HTTP = cfg.HTTP
+		}
+		if cfg.UserAgent != "" {
+			config.UserAgent = cfg.UserAgent
+		}
+		if cfg.Version != "" {
+			config.UserAgent += "/" + cfg.Version
+		}
+	}
+
+	if !strings.HasSuffix(config.BaseURL, "/") {
+		return nil, fmt.Errorf("baseURL must have a trailing slash, but %q does not", config.BaseURL)
+	}
+	if config.Token == "" {
+		return nil, fmt.Errorf("Missing API token")
 	}
 
 	c := &Client{}
 
-	c.http = &http.Client{}
-	c.baseURL, _ = url.Parse(defaultBaseURL)
-	c.userAgent = defaultUserAgent
-	c.token = token
+	c.http = config.HTTP
+	c.baseURL, _ = url.Parse(config.BaseURL)
+	c.userAgent = config.UserAgent
+	c.token = config.Token
 
 	// Create services
 	c.common.client = c

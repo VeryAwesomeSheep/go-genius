@@ -11,13 +11,12 @@ import (
 )
 
 func main() {
-	token := "your-client-access-token"
-	if token == "" {
-		log.Fatal("No user token present")
+	// Create new client
+	config := &genius.Config{
+		Token: "your-client-access-token",
 	}
 
-	// Create new client
-	client, err := genius.NewClient(token)
+	client, err := genius.NewClient(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,7 +26,9 @@ func main() {
 	defer cancel()
 
 	// Request Referents data
-	referents, _, err := client.Referents.Get(ctx, &genius.ReferentsOptions{WebPageID: webpage-id, CreatedByID: id, TextFormatOptions: genius.TextFormatOptions{TextFormat: genius.FormatPlain}})
+	webPageID := 1234
+	createdByID := 5678
+	referents, _, err := client.Referents.Get(ctx, &genius.ReferentsOptions{WebPageID: webPageID, CreatedByID: createdByID, TextFormatOptions: genius.TextFormatOptions{TextFormat: genius.FormatPlain}})
 	if err != nil {
 		log.Fatal(err)
 	}

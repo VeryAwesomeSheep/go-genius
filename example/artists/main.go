@@ -11,13 +11,12 @@ import (
 )
 
 func main() {
-	token := "your-client-access-token"
-	if token == "" {
-		log.Fatal("No user token present")
+	// Create new client
+	config := &genius.Config{
+		Token: "your-client-access-token",
 	}
 
-	// Create new client
-	client, err := genius.NewClient(token)
+	client, err := genius.NewClient(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,13 +26,14 @@ func main() {
 	defer cancel()
 
 	// Request Artist data
-	artist, _, err := client.Artists.Get(ctx, artist-id)
+	artistID := 1234
+	artist, _, err := client.Artists.Get(ctx, artistID)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Request Artist's Songs data
-	artistSongs, _, err := client.Artists.GetSongs(ctx, artist-id,
+	artistSongs, _, err := client.Artists.GetSongs(ctx, artistID,
 		&genius.ArtistSongsOptions{Sort: genius.SortPopularity, PagingOptions: genius.PagingOptions{PerPage: 10, Page: 1}})
 
 	// Access individual pieces of information
