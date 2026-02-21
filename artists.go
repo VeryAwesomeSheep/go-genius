@@ -8,6 +8,7 @@ import (
 
 type ArtistsService Service
 
+// Artist represents data about an artist.
 type Artist struct {
 	AlternateNames []string     `json:"alternate_names"` // Available only via ArtistsService
 	APIPath        string       `json:"api_path"`
@@ -38,6 +39,7 @@ type ArtistSongsOptions struct {
 	PagingOptions
 }
 
+// Get returns data of an artist by its ID.
 func (s *ArtistsService) Get(ctx context.Context, id int) (*Artist, *http.Response, error) {
 	u := fmt.Sprintf("artists/%d", id)
 
@@ -58,6 +60,7 @@ func (s *ArtistsService) Get(ctx context.Context, id int) (*Artist, *http.Respon
 	return r.Response.Artist, resp, nil
 }
 
+// GetSongs returns paginated data of all songs for an artist.
 func (s *ArtistsService) GetSongs(ctx context.Context, id int, opts *ArtistSongsOptions) ([]*SongRelationshipsSong, *http.Response, error) {
 	u := fmt.Sprintf("artists/%d/songs", id)
 

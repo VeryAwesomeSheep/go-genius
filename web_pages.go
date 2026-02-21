@@ -7,6 +7,7 @@ import (
 
 type WebPagesService Service
 
+// WebPage represents data about a web page.
 type WebPage struct {
 	APIPath         *string `json:"api_path"`
 	Domain          string  `json:"domain"`
@@ -24,6 +25,7 @@ type WebPagesOptions struct {
 	OgURL             string `url:"og_url,omitempty"`
 }
 
+// Get returns data for a web page by raw, canonical and/or og url.
 func (s *WebPagesService) Get(ctx context.Context, opts *WebPagesOptions) (*WebPage, *http.Response, error) {
 	u := "web_pages/lookup"
 

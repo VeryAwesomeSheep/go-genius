@@ -8,6 +8,7 @@ import (
 
 type AnnotationsService Service
 
+// Annotation represents data about an annotation.
 type Annotation struct {
 	APIPath      string   `json:"api_path"`
 	Body         TextBody `json:"body"`
@@ -23,6 +24,7 @@ type AnnotationsOptions struct {
 	TextFormatOptions
 }
 
+// Get returns data for an annotation by its ID.
 func (s *AnnotationsService) Get(ctx context.Context, id int, opts *AnnotationsOptions) (*Annotation, *Referent, *http.Response, error) {
 	u := fmt.Sprintf("annotations/%d", id)
 

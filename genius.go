@@ -19,6 +19,7 @@ const (
 	defaultBaseURL   = "https://api.genius.com/"
 )
 
+// Client is a Genius API client that provides bacis for accessing Genius API.
 type Client struct {
 	http      *http.Client
 	baseURL   *url.URL
@@ -34,11 +35,12 @@ type Client struct {
 	Search      *SearchService
 }
 
+// Service is the common service struct that holds a reference to the Client.
 type Service struct {
 	client *Client
 }
 
-// Creates a new Genius API client with access token
+// NewClient creates a new Genius API client.
 func NewClient(token string) (*Client, error) {
 	if token == "" {
 		return nil, fmt.Errorf("token cannot be empty")
@@ -63,12 +65,13 @@ func NewClient(token string) (*Client, error) {
 	return c, nil
 }
 
-func (c *Client) NewRequest(method, url string, body any) (*http.Request, error) {
+// NewRequest performs basic API request preparation.
+func (c *Client) NewRequest(method, path string, body any) (*http.Request, error) {
 	if !strings.HasSuffix(c.baseURL.Path, "/") {
 		return nil, fmt.Errorf("baseURL must have a trailing slash, but %q does not", c.baseURL)
 	}
 
-	u, err := c.baseURL.Parse(url)
+	u, err := c.baseURL.Parse(path)
 	if err != nil {
 		return nil, err
 	}
@@ -105,6 +108,8 @@ func (c *Client) NewRequest(method, url string, body any) (*http.Request, error)
 	return req, nil
 }
 
+// Response is a Genius API response. This wraps the standard http.Response
+// and provides the decoded data.
 type Response[T any] struct {
 	Meta struct {
 		Status  int    `json:"status"`
@@ -113,6 +118,8 @@ type Response[T any] struct {
 	Response T `json:"response"`
 }
 
+// addOptions adds the parameters in opts as URL query parameters to s. opts
+// must be a struct whose fields contain "url" tags.
 func addOptions(s string, opts any) (string, error) {
 	v := reflect.ValueOf(opts)
 	if v.Kind() == reflect.Ptr && v.IsNil() {
@@ -186,11 +193,13 @@ func addOptions(s string, opts any) (string, error) {
 	return u.String(), nil
 }
 
+// PagingOptions specifies the optional parameters for requests that support offset pagination.
 type PagingOptions struct {
 	PerPage int `url:"per_page,omitempty"`
 	Page    int `url:"page,omitempty"`
 }
 
+// TextFormat is an enum that represents all possible formats.
 type TextFormat string
 
 const (
@@ -199,16 +208,22 @@ const (
 	FormatHTML  TextFormat = "html"
 )
 
+// TextFormatOptions specifies the optional parameters for requests that support variable text format.
 type TextFormatOptions struct {
 	TextFormat TextFormat `url:"text_format,omitempty"`
 }
 
+// TextBody represents the body of a text-based resource, supporting
+// multiple formats (DOM, Plain text, HTML).
 type TextBody struct {
 	Dom   any    `json:"dom"`   // Populated by default or if ?text_format=dom is used
 	Plain string `json:"plain"` // Only populated if ?text_format=plain is used
 	HTML  string `json:"html"`  // Only populated if ?text_format=html is used
 }
 
+// Do sends an API request and returns the API response. The API response is
+// JSON decoded and stored in the value pointed to by v, or returned as an
+// error if an API error occurred.
 func (c *Client) Do(ctx context.Context, req *http.Request, v any) (*http.Response, error) {
 	req = req.WithContext(ctx)
 
@@ -238,6 +253,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v any) (*http.Respon
 	return resp, nil
 }
 
+// ErrorResponse reports an error caused by an API request.
 type ErrorResponse struct {
 	Response *http.Response `json:"-"`
 	Message  string         `json:"message"`
@@ -247,6 +263,9 @@ func (r *ErrorResponse) Error() string {
 	return fmt.Errorf("Status: %v, Message: %v", r.Response.StatusCode, r.Message).Error()
 }
 
+// CheckResponse checks the API response for errors, and returns them if
+// present. A response is considered an error if it has a status code outside
+// the 200 range.
 func CheckResponse(r *http.Response) error {
 	if r.StatusCode >= 200 && r.StatusCode <= 299 {
 		return nil

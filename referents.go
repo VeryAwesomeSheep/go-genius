@@ -7,6 +7,7 @@ import (
 
 type ReferentsService Service
 
+// Referent represents data about the referent.
 type Referent struct {
 	AnnotatorID    int           `json:"annotator_id"`
 	AnnotatorLogin string        `json:"annotator_login"`
@@ -39,6 +40,7 @@ type ReferentsOptions struct {
 	PagingOptions
 }
 
+// Get returns list of referents by song_id or web_page_id.
 func (s *ReferentsService) Get(ctx context.Context, opts *ReferentsOptions) ([]*Referent, *http.Response, error) {
 	u := "referents"
 

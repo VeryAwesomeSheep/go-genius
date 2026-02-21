@@ -8,6 +8,7 @@ import (
 
 type SongsService Service
 
+// Song represents data about a song.
 type Song struct {
 	APIPath            string               `json:"api_path"`
 	AppleMusicID       *string              `json:"apple_music_id"`
@@ -37,6 +38,7 @@ type Stats struct {
 	PageViews    *int `json:"pageviews"`
 }
 
+// Album represents data about an album.
 type Album struct {
 	APIPath               string    `json:"api_path"`
 	CoverArtURL           string    `json:"cover_art_url"`
@@ -97,6 +99,7 @@ type TranslationSong struct {
 	URL      string `json:"url"`
 }
 
+// Get returns data for a song by its ID.
 func (s *SongsService) Get(ctx context.Context, id int) (*Song, *http.Response, error) {
 	u := fmt.Sprintf("songs/%d", id)
 

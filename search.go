@@ -18,6 +18,7 @@ type SearchOptions struct {
 	PagingOptions
 }
 
+// Get returns list of songs related to the query.
 func (s *SearchService) Get(ctx context.Context, query string, opts *SearchOptions) ([]*SongRelationshipsSong, *http.Response, error) {
 	u := fmt.Sprintf("search?q=%s", url.QueryEscape(query))
 
