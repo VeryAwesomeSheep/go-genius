@@ -216,9 +216,9 @@ type TextFormatOptions struct {
 // TextBody represents the body of a text-based resource, supporting
 // multiple formats (DOM, Plain text, HTML).
 type TextBody struct {
-	Dom   any    `json:"dom"`   // Populated by default or if ?text_format=dom is used
-	Plain string `json:"plain"` // Only populated if ?text_format=plain is used
-	HTML  string `json:"html"`  // Only populated if ?text_format=html is used
+	Dom   *any    `json:"dom"`   // Populated by default or if ?text_format=dom is used
+	Plain *string `json:"plain"` // Only populated if ?text_format=plain is used
+	HTML  *string `json:"html"`  // Only populated if ?text_format=html is used
 }
 
 // Do sends an API request and returns the API response. The API response is
