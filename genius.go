@@ -204,6 +204,14 @@ func addOptions(s string, opts any) (string, error) {
 				continue
 			}
 
+			// Handle pointer options
+			if value.Kind() == reflect.Ptr {
+				if value.IsNil() {
+					continue
+				}
+				value = value.Elem()
+			}
+
 			// Convert value to string and add to query
 			switch value.Kind() {
 			case reflect.String:
