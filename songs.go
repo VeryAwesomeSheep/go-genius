@@ -103,7 +103,7 @@ type TranslationSong struct {
 func (s *SongsService) Get(ctx context.Context, id int) (*Song, *http.Response, error) {
 	u := fmt.Sprintf("songs/%d", id)
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(u)
 	if err != nil {
 		return nil, nil, err
 	}

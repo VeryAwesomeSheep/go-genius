@@ -33,7 +33,7 @@ func (s *AnnotationsService) Get(ctx context.Context, id int, opts *AnnotationsO
 		return nil, nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(u)
 	if err != nil {
 		return nil, nil, nil, err
 	}

@@ -1,7 +1,6 @@
 package genius
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -114,7 +113,7 @@ func NewClient(cfg *Config) (*Client, error) {
 }
 
 // NewRequest performs basic API request preparation.
-func (c *Client) NewRequest(method, path string, body any) (*http.Request, error) {
+func (c *Client) NewRequest(path string) (*http.Request, error) {
 	if !strings.HasSuffix(c.baseURL.Path, "/") {
 		return nil, fmt.Errorf("baseURL must have a trailing slash, but %q does not", c.baseURL)
 	}
@@ -124,26 +123,9 @@ func (c *Client) NewRequest(method, path string, body any) (*http.Request, error
 		return nil, err
 	}
 
-	var bodyReader io.Reader
-	if body != nil {
-		buf := new(bytes.Buffer)
-		enc := json.NewEncoder(buf)
-		enc.SetEscapeHTML(false)
-		err := enc.Encode(body)
-		if err != nil {
-			return nil, err
-		}
-
-		bodyReader = buf
-	}
-
-	req, err := http.NewRequest(method, u.String(), bodyReader)
+	req, err := http.NewRequest(http.MethodGet, u.String(), nil)
 	if err != nil {
 		return nil, err
-	}
-
-	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
 	}
 
 	req.Header.Set("Accept", "application/json")

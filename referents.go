@@ -49,7 +49,7 @@ func (s *ReferentsService) Get(ctx context.Context, opts *ReferentsOptions) ([]*
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(u)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -27,7 +27,7 @@ func (s *SearchService) Get(ctx context.Context, query string, opts *SearchOptio
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(u)
 	if err != nil {
 		return nil, nil, err
 	}

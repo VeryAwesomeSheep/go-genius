@@ -43,7 +43,7 @@ type ArtistSongsOptions struct {
 func (s *ArtistsService) Get(ctx context.Context, id int) (*Artist, *http.Response, error) {
 	u := fmt.Sprintf("artists/%d", id)
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(u)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -69,7 +69,7 @@ func (s *ArtistsService) GetSongs(ctx context.Context, id int, opts *ArtistSongs
 		return nil, nil, err
 	}
 
-	req, err := s.client.NewRequest("GET", u, nil)
+	req, err := s.client.NewRequest(u)
 	if err != nil {
 		return nil, nil, err
 	}
