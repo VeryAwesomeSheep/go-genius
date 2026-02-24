@@ -312,7 +312,7 @@ func CheckResponse(r *http.Response) error {
 	errorResponse := &Response[any]{}
 	data, err := io.ReadAll(r.Body)
 	if err == nil && len(data) > 0 {
-		json.Unmarshal(data, errorResponse)
+		_ = json.Unmarshal(data, errorResponse)
 	}
 
 	return &ErrorResponse{r, errorResponse.Meta.Message}

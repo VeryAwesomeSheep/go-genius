@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/VeryAwesomeSheep/go-genius"
+	genius "github.com/VeryAwesomeSheep/go-genius"
 )
 
 func main() {

@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/VeryAwesomeSheep/go-genius"
+	genius "github.com/VeryAwesomeSheep/go-genius"
 )
 
 func main() {
@@ -35,6 +35,9 @@ func main() {
 	// Request Artist's Songs data
 	artistSongs, _, err := client.Artists.GetSongs(ctx, artistID,
 		&genius.ArtistSongsOptions{Sort: genius.SortPopularity, PagingOptions: genius.PagingOptions{PerPage: 10, Page: 1}})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Access individual pieces of information
 	fmt.Println(artist.Name)
