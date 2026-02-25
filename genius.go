@@ -90,7 +90,7 @@ func NewClient(cfg *Config) (*Client, error) {
 		return nil, fmt.Errorf("baseURL must have a trailing slash, but %q does not", config.BaseURL)
 	}
 	if config.Token == "" {
-		return nil, fmt.Errorf("Missing API token")
+		return nil, fmt.Errorf("missing API token")
 	}
 
 	c := &Client{}
@@ -298,7 +298,7 @@ type ErrorResponse struct {
 }
 
 func (r *ErrorResponse) Error() string {
-	return fmt.Errorf("Status: %v, Message: %v", r.Response.StatusCode, r.Message).Error()
+	return fmt.Errorf("status: %v, message: %v", r.Response.StatusCode, r.Message).Error()
 }
 
 // CheckResponse checks the API response for errors, and returns them if

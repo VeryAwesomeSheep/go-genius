@@ -443,7 +443,7 @@ func Test_Do(t *testing.T) {
 func Test_Error(t *testing.T) {
 	resp := &http.Response{StatusCode: http.StatusNotFound}
 	err := &ErrorResponse{Response: resp, Message: "not found"}
-	want := "Status: 404, Message: not found"
+	want := "status: 404, message: not found"
 	if err.Error() != want {
 		t.Errorf("ErrorResponse.Error() = %v, want %v", err.Error(), want)
 	}
