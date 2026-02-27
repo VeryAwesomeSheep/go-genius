@@ -56,6 +56,7 @@ type Client struct {
 	Songs       *SongsService
 	WebPages    *WebPagesService
 	Search      *SearchService
+	Users       *UsersService
 }
 
 // Service is the common service struct that holds a reference to the Client.
@@ -108,6 +109,7 @@ func NewClient(cfg *Config) (*Client, error) {
 	c.Songs = (*SongsService)(&c.common)
 	c.WebPages = (*WebPagesService)(&c.common)
 	c.Search = (*SearchService)(&c.common)
+	c.Users = (*UsersService)(&c.common)
 
 	return c, nil
 }
