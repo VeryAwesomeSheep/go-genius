@@ -10,14 +10,26 @@ type AnnotationsService Service
 
 // Annotation represents data about an annotation.
 type Annotation struct {
-	APIPath      string   `json:"api_path"`
-	Body         TextBody `json:"body"`
-	CommentCount int      `json:"comment_count"`
-	ID           int      `json:"id"`
-	State        string   `json:"state"`
-	URL          string   `json:"url"`
-	Verified     bool     `json:"verified"`
-	VotesTotal   int      `json:"votes_total"`
+	APIPath          string             `json:"api_path"`
+	Body             TextBody           `json:"body"`
+	CommentCount     int                `json:"comment_count"`
+	HasVoters        bool               `json:"has_voters"`
+	ID               int                `json:"id"`
+	Pinned           bool               `json:"pinned"`
+	ShareURL         string             `json:"share_url"`
+	State            string             `json:"state"`
+	URL              string             `json:"url"`
+	Verified         bool               `json:"verified"`
+	VotesTotal       int                `json:"votes_total"`
+	Authors          []AnnotationAuthor `json:"authors"`
+	CosignedBy       []*User            `json:"cosigned_by"`
+	RejectionComment *string            `json:"rejection_comment"`
+	VerifiedBy       *User              `json:"verified_by"`
+}
+
+type AnnotationAuthor struct {
+	Attribution float32 `json:"attribution"`
+	User        User    `json:"user"`
 }
 
 type AnnotationsOptions struct {

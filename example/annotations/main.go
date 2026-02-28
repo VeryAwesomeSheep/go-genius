@@ -36,6 +36,11 @@ func main() {
 	fmt.Println(annotation.Body.Plain)
 	fmt.Println(referent.AnnotatorID)
 
+	// Access pointer type variables
+	if annotation.Body.Plain != nil {
+		fmt.Println(*annotation.Body.Plain)
+	}
+
 	// Print entirety of requested data
 	annotationData, _ := json.MarshalIndent(annotation, "", "  ")
 	fmt.Println(string(annotationData))
