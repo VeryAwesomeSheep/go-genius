@@ -27,7 +27,7 @@ func main() {
 
 	// Request Artist data
 	artistID := 1234
-	artist, _, err := client.Artists.Get(ctx, artistID)
+	artist, _, err := client.Artists.Get(ctx, artistID, &genius.ArtistOptions{TextFormatOptions: genius.TextFormatOptions{TextFormat: genius.FormatPlain}})
 	if err != nil {
 		log.Fatal(err)
 	}

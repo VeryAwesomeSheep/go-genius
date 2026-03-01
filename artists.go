@@ -10,15 +10,22 @@ type ArtistsService Service
 
 // Artist represents data about an artist.
 type Artist struct {
-	AlternateNames []string     `json:"alternate_names"` // Available only via ArtistsService
-	APIPath        string       `json:"api_path"`
-	ID             int          `json:"id"`
-	ImageURL       string       `json:"image_url"`
-	IsVerified     bool         `json:"is_verified"`
-	Name           string       `json:"name"`
-	SocialLinks    *SocialLinks `json:"social_links"` // Available only via ArtistsService
-	URL            string       `json:"url"`
-	FollowersCount int          `json:"followers_count"` // Available only via ArtistsService
+	AlternateNames        []string     `json:"alternate_names"` // Available only via ArtistsService
+	APIPath               string       `json:"api_path"`
+	Description           TextBody     `json:"description"`
+	HeaderImageURL        string       `json:"header_image_url"`
+	ID                    int          `json:"id"`
+	ImageURL              string       `json:"image_url"`
+	IsMemeVerified        bool         `json:"is_meme_verified"`
+	IsVerified            bool         `json:"is_verified"`
+	Name                  string       `json:"name"`
+	SocialLinks           *SocialLinks `json:"social_links"` // Available only via ArtistsService
+	TranslationArtist     bool         `json:"translation_artist"`
+	URL                   string       `json:"url"`
+	FollowersCount        int          `json:"followers_count"` // Available only via ArtistsService
+	IQ                    *int         `json:"iq"`
+	DescriptionAnnotation Referent     `json:"description_annotation"`
+	User                  *User        `json:"user"`
 }
 
 type SocialLinks struct {
@@ -34,14 +41,23 @@ const (
 	SortPopularity ArtistSongsSort = "popularity"
 )
 
+type ArtistOptions struct {
+	TextFormatOptions
+}
+
 type ArtistSongsOptions struct {
 	Sort ArtistSongsSort `url:"sort,omitempty"`
 	PagingOptions
 }
 
 // Get returns data of an artist by its ID.
-func (s *ArtistsService) Get(ctx context.Context, id int) (*Artist, *http.Response, error) {
+func (s *ArtistsService) Get(ctx context.Context, id int, opts *ArtistOptions) (*Artist, *http.Response, error) {
 	u := fmt.Sprintf("artists/%d", id)
+
+	u, err := addOptions(u, opts)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	req, err := s.client.NewRequest(u)
 	if err != nil {
