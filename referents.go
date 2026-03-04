@@ -13,23 +13,36 @@ type Referent struct {
 	AnnotatorLogin string        `json:"annotator_login"`
 	APIPath        string        `json:"api_path"`
 	Classification string        `json:"classification"`
+	Featured       *bool         `json:"featured"`
 	Fragment       string        `json:"fragment"`
 	ID             int           `json:"id"`
 	IsDescription  bool          `json:"is_description"`
-	SongID         int           `json:"song_id"`
+	Path           string        `json:"path"`
+	Range          Range         `json:"range"`
+	SongID         *int          `json:"song_id"`
 	URL            string        `json:"url"`
 	Annotatable    *Annotatable  `json:"annotatable"`
 	Annotations    []*Annotation `json:"annotations"` // Available only via ReferentsService
 }
 
+type Range struct {
+	Start       *string `json:"start"`
+	StartOffset *string `json:"startOffset"`
+	End         *string `json:"end"`
+	EndOffset   *string `json:"endOffset"`
+	Before      *string `json:"before"`
+	After       *string `json:"after"`
+	Content     string  `json:"content"`
+}
+
 type Annotatable struct {
-	APIPath  string `json:"api_path"`
-	Context  string `json:"context"`
-	ID       int    `json:"id"`
-	ImageURL string `json:"image_url"`
-	Title    string `json:"title"`
-	Type     string `json:"type"`
-	URL      string `json:"url"`
+	APIPath  string  `json:"api_path"`
+	Context  *string `json:"context"`
+	ID       int     `json:"id"`
+	ImageURL string  `json:"image_url"`
+	Title    string  `json:"title"`
+	Type     string  `json:"type"`
+	URL      string  `json:"url"`
 }
 
 type ReferentsOptions struct {

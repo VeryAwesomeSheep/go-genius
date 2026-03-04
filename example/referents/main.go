@@ -33,9 +33,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Access individual pieces of information
 	if len(referents) > 0 {
+		// Access individual pieces of information
 		fmt.Println(referents[0].Classification)
+
+		// Access pointer type variables
+		if referents[0].SongID != nil {
+			fmt.Println(*referents[0].SongID)
+		}
 	}
 
 	// Print entirety of requested data
